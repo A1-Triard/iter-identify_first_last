@@ -67,10 +67,12 @@ impl<I: FusedIterator> FusedIterator for IdentifyFirst<I> { }
 
 pub trait IteratorIdentifyFirstLastExt: Iterator + Sized {
     fn identify_first(self) -> IdentifyFirst<Self>;
+    fn identify_last(self) -> IdentifyLast<Self>;
 }
 
 impl<I: Iterator + Sized> IteratorIdentifyFirstLastExt for I {
     fn identify_first(self) -> IdentifyFirst<Self> { IdentifyFirst { is_first: true, iter: self } }
+    fn identify_last(self) -> IdentifyLast<Self> { IdentifyLast { iter: self.peekable() } }
 }
 
 #[cfg(test)]
