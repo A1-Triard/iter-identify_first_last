@@ -1,5 +1,6 @@
 [package]
 edition = "2021"
+rust-version = "1.60"
 name = "iter_identify_first_last"
 version = "0.0.1"
 authors = ["warlock <internalmike@gmail.com>"]
