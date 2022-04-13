@@ -1,8 +1,43 @@
 #![no_std]
 
-use core::iter::{FusedIterator, Iterator};
+use core::fmt::{self, Debug, Formatter};
+use core::iter::{FusedIterator, Iterator, Peekable};
 use core::mem::replace;
 
+pub struct IdentifyLast<I: Iterator> {
+    iter: Peekable<I>,
+}
+
+impl<I: Iterator + Debug> Debug for IdentifyLast<I> where I::Item: Debug {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> { self.iter.fmt(f) }
+}
+
+impl<I: Iterator + Clone> Clone for IdentifyLast<I> where I::Item: Clone {
+    fn clone(&self) -> Self { IdentifyLast { iter: self.iter.clone() } }
+}
+
+impl<I: Iterator> Iterator for IdentifyLast<I> {
+    type Item = (I::Item, bool);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(item) = self.iter.next() {
+            let is_last = self.iter.peek().is_none();
+            Some((item, is_last))
+        } else {
+            None
+        }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
+}
+
+impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyLast<I> {
+    fn len(&self) -> usize { self.iter.len() }
+}
+
+impl<I: FusedIterator> FusedIterator for IdentifyLast<I> { }
+
+#[derive(Debug, Clone)]
 pub struct IdentifyFirst<I: Iterator> {
     is_first: bool,
     iter: I,
