@@ -1,13 +1,13 @@
 [package]
 edition = "2021"
 rust-version = "1.59"
-name = "iter_identify_first_last"
+name = "iter-identify_first_last"
 version = "0.0.1"
 authors = ["warlock <internalmike@gmail.com>"]
 description = "A helper iterator, flagging first and last elements."
 readme = "README.md"
-documentation = "https://docs.rs/iter_identify_first_last/"
+documentation = "https://docs.rs/iter-identify_first_last/"
 keywords = ["iter", "iterator", "first", "last", "is_last"]
 categories = ["rust-patterns", "no-std"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/A1-Triard/iter_identify_first_last"
+repository = "https://github.com/A1-Triard/iter-identify_first_last"
