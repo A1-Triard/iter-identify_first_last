@@ -111,9 +111,11 @@ impl<I: Iterator + Sized> IteratorIdentifyFirstLastExt for I {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn it_works() {
+    use quickcheck_macros::quickcheck;
+
+    #[quickcheck]
+    fn it_works() -> bool {
         let result = 2 + 2;
-        assert_eq!(result, 4);
+        result == 4
     }
 }

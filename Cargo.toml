@@ -11,3 +11,7 @@ keywords = ["iter", "iterator", "first", "last", "is_last"]
 categories = ["rust-patterns", "no-std"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/A1-Triard/iter-identify_first_last"
+
+[dev-dependencies]
+quickcheck = "1.0.3" 
+quickcheck_macros = "1.0.0"
