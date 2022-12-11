@@ -1,0 +1,16 @@
+[package]
+edition = "2021"
+name = "ensure_no_std"
+version = "0.0.0"
+publish = false
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+arrayvec = { version = "0.7.2", default-features = false }
+iter-identify_first_last = { path = ".." }
+exit-no-std = "0.1.0"
