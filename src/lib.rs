@@ -5,7 +5,7 @@ use core::iter::{FusedIterator, Iterator, Map, Peekable};
 use core::mem::replace;
 
 pub struct IdentifyFirstLast<I: Iterator>(
-    Map<IdentifyFirst<IdentifyLast<I>>, fn(((I::Item, bool), bool)) -> (I::Item, bool, bool)>
+    Map<IdentifyFirst<IdentifyLast<I>>, fn((bool, (bool, I::Item))) -> (bool, bool, I::Item)>
 );
 
 impl<I: Iterator + Debug> Debug for IdentifyFirstLast<I> where I::Item: Debug {
@@ -17,7 +17,7 @@ impl<I: Iterator + Clone> Clone for IdentifyFirstLast<I> where I::Item: Clone {
 }
 
 impl<I: Iterator> Iterator for IdentifyFirstLast<I> {
-    type Item = (I::Item, bool, bool);
+    type Item = (bool, bool, I::Item);
 
     fn next(&mut self) -> Option<Self::Item> { self.0.next() }
 
@@ -43,12 +43,12 @@ impl<I: Iterator + Clone> Clone for IdentifyLast<I> where I::Item: Clone {
 }
 
 impl<I: Iterator> Iterator for IdentifyLast<I> {
-    type Item = (I::Item, bool);
+    type Item = (bool, I::Item);
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(item) = self.iter.next() {
             let is_last = self.iter.peek().is_none();
-            Some((item, is_last))
+            Some((is_last, item))
         } else {
             None
         }
@@ -70,12 +70,12 @@ pub struct IdentifyFirst<I: Iterator> {
 }
 
 impl<I: Iterator> Iterator for IdentifyFirst<I> {
-    type Item = (I::Item, bool);
+    type Item = (bool, I::Item);
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(item) = self.iter.next() {
             let is_first = replace(&mut self.is_first, false);
-            Some((item, is_first))
+            Some((is_first, item))
         } else {
             self.is_first = true;
             None
@@ -104,18 +104,37 @@ impl<I: Iterator + Sized> IteratorIdentifyFirstLastExt for I {
 
     fn identify_first_last(self) -> IdentifyFirstLast<Self> {
         IdentifyFirstLast(self.identify_last().identify_first().map(
-            |((item, is_last), is_first)| (item, is_first, is_last)
+            |(is_first, (is_last, item))| (is_first, is_last, item)
         ))
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use quickcheck_macros::quickcheck;
+    use arrayvec::ArrayVec;
+    use crate::IteratorIdentifyFirstLastExt;
 
-    #[quickcheck]
-    fn it_works() -> bool {
-        let result = 2 + 2;
-        result == 4
+    #[test]
+    fn identify_first() {
+        assert_eq!(
+            [1, 2, 3, 4].into_iter().identify_first().collect::<ArrayVec<_, 4>>().as_slice(),
+            &[(true, 1), (false, 2), (false, 3), (false, 4)]
+        );
+    }
+
+    #[test]
+    fn identify_last() {
+        assert_eq!(
+            [1, 2, 3, 4].into_iter().identify_last().collect::<ArrayVec<_, 4>>().as_slice(),
+            &[(false, 1), (false, 2), (false, 3), (true, 4)]
+        );
+    }
+
+    #[test]
+    fn identify_first_last() {
+        assert_eq!(
+            [1, 2, 3, 4].into_iter().identify_first_last().collect::<ArrayVec<_, 4>>().as_slice(),
+            &[(true, false, 1), (false, false, 2), (false, false, 3), (false, true, 4)]
+        );
     }
 }
