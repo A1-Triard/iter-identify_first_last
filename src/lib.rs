@@ -1,11 +1,16 @@
 #![cfg_attr(feature="nightly", feature(trusted_len))]
 
-#![no_std]
+#![deny(warnings)]
+#![doc(test(attr(deny(warnings))))]
+#![doc(test(attr(allow(dead_code))))]
+#![doc(test(attr(allow(unused_variables))))]
 
 #![doc=document_features::document_features!()]
 
 #[doc=include_str!("../README.md")]
 type _DocTestReadme = ();
+
+#![no_std]
 
 use core::fmt::{self, Debug, Formatter};
 use core::iter::{FusedIterator, Iterator, Map, Peekable};
