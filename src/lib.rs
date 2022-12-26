@@ -1,7 +1,16 @@
+#![cfg_attr(feature="nightly", feature(trusted_len))]
+
 #![no_std]
+
+#![doc=document_features::document_features!()]
+
+#[doc=include_str!("../README.md")]
+type _DocTestReadme = ();
 
 use core::fmt::{self, Debug, Formatter};
 use core::iter::{FusedIterator, Iterator, Map, Peekable};
+#[cfg(feature="nightly")]
+use core::iter::TrustedLen;
 use core::mem::replace;
 
 pub struct IdentifyFirstLast<I: Iterator>(
@@ -23,6 +32,9 @@ impl<I: Iterator> Iterator for IdentifyFirstLast<I> {
 
     fn size_hint(&self) -> (usize, Option<usize>) { self.0.size_hint() }
 }
+
+#[cfg(feature="nightly")]
+unsafe impl<I: TrustedLen> TrustedLen for IdentifyFirstLast<I> { }
 
 impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyFirstLast<I> {
     fn len(&self) -> usize { self.0.len() }
@@ -57,11 +69,12 @@ impl<I: Iterator> Iterator for IdentifyLast<I> {
     fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
 
+#[cfg(feature="nightly")]
+unsafe impl<I: TrustedLen> TrustedLen for IdentifyLast<I> { }
+
 impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyLast<I> {
     fn len(&self) -> usize { self.iter.len() }
 }
-
-impl<I: FusedIterator> FusedIterator for IdentifyLast<I> { }
 
 #[derive(Debug, Clone)]
 pub struct IdentifyFirst<I: Iterator> {
@@ -84,6 +97,9 @@ impl<I: Iterator> Iterator for IdentifyFirst<I> {
 
     fn size_hint(&self) -> (usize, Option<usize>) { self.iter.size_hint() }
 }
+
+#[cfg(feature="nightly")]
+unsafe impl<I: TrustedLen> TrustedLen for IdentifyFirst<I> { }
 
 impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyFirst<I> {
     fn len(&self) -> usize { self.iter.len() }
