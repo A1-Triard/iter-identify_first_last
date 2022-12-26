@@ -14,7 +14,7 @@ repository = "https://github.com/A1-Triard/iter-identify_first_last"
 
 [features]
 default = ["nightly"]
-## Enabled by default. Disable to make the library compatible with stable and beta Rust channels.
+## disable to make the library compatible with stable and beta Rust channels.
 nightly = []
 
 [dev-dependencies]

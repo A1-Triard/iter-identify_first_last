@@ -5,6 +5,7 @@
 #![doc(test(attr(allow(dead_code))))]
 #![doc(test(attr(allow(unused_variables))))]
 
+//! ## Feature flags
 #![doc=document_features::document_features!()]
 
 #![no_std]
@@ -18,6 +19,10 @@ use core::iter::{FusedIterator, Iterator, Map, Peekable};
 use core::iter::TrustedLen;
 use core::mem::replace;
 
+/// An iterator that yields the marking the boundary elements boolean flags and the element during iteration.
+///
+/// This struct is created by the [`identify_first_last`](IteratorIdentifyFirstLastExt::identify_first_last)
+/// extension method on [`Iterator`]. See its documentation for more.
 pub struct IdentifyFirstLast<I: Iterator>(
     Map<IdentifyFirst<IdentifyLast<I>>, fn((bool, (bool, I::Item))) -> (bool, bool, I::Item)>
 );
@@ -47,6 +52,10 @@ impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyFirstLast<I> {
 
 impl<I: FusedIterator> FusedIterator for IdentifyFirstLast<I> { }
 
+/// An iterator that yields the marking the last element boolean flag and the element during iteration.
+///
+/// This struct is created by the [`identify_last`](IteratorIdentifyFirstLastExt::identify_last)
+/// extension method on [`Iterator`]. See its documentation for more.
 pub struct IdentifyLast<I: Iterator> {
     iter: Peekable<I>,
 }
@@ -81,6 +90,10 @@ impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyLast<I> {
     fn len(&self) -> usize { self.iter.len() }
 }
 
+/// An iterator that yields the marking the first element boolean flag and the element during iteration.
+///
+/// This struct is created by the [`identify_first`](IteratorIdentifyFirstLastExt::identify_first)
+/// extension method on [`Iterator`]. See its documentation for more.
 #[derive(Debug, Clone)]
 pub struct IdentifyFirst<I: Iterator> {
     is_first: bool,
@@ -112,9 +125,28 @@ impl<I: ExactSizeIterator> ExactSizeIterator for IdentifyFirst<I> {
 
 impl<I: FusedIterator> FusedIterator for IdentifyFirst<I> { }
 
+/// Extends [`Iterator`] with methods for marking first and last elements with boolean flags.
 pub trait IteratorIdentifyFirstLastExt: Iterator + Sized {
+    /// Creates an iterator which gives the `is_first` flag as well as the next value.
+    ///
+    /// The iterator returned yields pairs `(is_first, val)`,
+    /// where `is_first` is the boolean which is true for the first element and false for the others,
+    /// and `val` is the value returned by the iterator.
     fn identify_first(self) -> IdentifyFirst<Self>;
+
+    /// Creates an iterator which gives the `is_last` flag as well as the next value.
+    ///
+    /// The iterator returned yields pairs `(is_last, val)`,
+    /// where `is_last` is the boolean which is true for the last element and false for the others,
+    /// and `val` is the value returned by the iterator.
     fn identify_last(self) -> IdentifyLast<Self>;
+
+    /// Creates an iterator which gives the `is_first` and `is_last` flags as well as the next value.
+    ///
+    /// The iterator returned yields triples `(is_first, is_last, val)`,
+    /// where `is_first` is the boolean which is true for the first element and false for the others,
+    /// `is_last` is the boolean which is true for the last element and false for the others,
+    /// and `val` is the value returned by the iterator.
     fn identify_first_last(self) -> IdentifyFirstLast<Self>;
 }
 
