@@ -7,10 +7,10 @@
 
 #![doc=document_features::document_features!()]
 
+#![no_std]
+
 #[doc=include_str!("../README.md")]
 type _DocTestReadme = ();
-
-#![no_std]
 
 use core::fmt::{self, Debug, Formatter};
 use core::iter::{FusedIterator, Iterator, Map, Peekable};

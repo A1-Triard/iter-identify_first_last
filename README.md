@@ -6,6 +6,7 @@ A helper iterator, flagging first and last elements.
 
 ```rust
 use iter_identify_first_last::IteratorIdentifyFirstLastExt;
+use std::fmt::Write;
 
 fn main() {
     let list = [1, 2, 3, 4, 5, 6];
@@ -14,7 +15,7 @@ fn main() {
         if !is_first {
             string.push(' ');
         }
-        write!(string, "{item}");
+        write!(string, "{item}").unwrap();
     }
     assert_eq!(string, "1 2 3 4 5 6");
 }
