@@ -15,7 +15,7 @@
 type _DocTestReadme = ();
 
 use core::fmt::{self, Debug, Formatter};
-use core::iter::{FusedIterator, Iterator, Map, Peekable};
+use core::iter::{FusedIterator, Map, Peekable};
 #[cfg(feature="nightly")]
 use core::iter::TrustedLen;
 use core::mem::replace;
