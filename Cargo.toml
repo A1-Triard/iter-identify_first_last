@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 name = "iter-identify_first_last"
-version = "0.2.2"
+version = "0.2.3"
 rust-version = "1.70"
 authors = ["warlock <internalmike@gmail.com>"]
 description = "A helper iterator, flagging first and last elements."
@@ -21,7 +21,7 @@ nightly = []
 arrayvec = { version = "0.7.2", default-features = false }
 
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = { status = "passively-maintained" }
 
 [dependencies]
 document-features = "0.2.7"
