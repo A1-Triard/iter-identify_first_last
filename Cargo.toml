@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 name = "iter-identify_first_last"
-version = "0.2.1"
+version = "0.2.2"
 rust-version = "1.70"
 authors = ["warlock <internalmike@gmail.com>"]
 description = "A helper iterator, flagging first and last elements."
